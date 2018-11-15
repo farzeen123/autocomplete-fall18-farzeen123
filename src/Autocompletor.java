@@ -8,6 +8,7 @@ import java.util.List;
  * @author Owen Astrachan changed API from Iterable to List
  */
 public interface Autocompletor {
+	
 
 	/**
 	 * Returns the top k matching terms in descending order of weight. If there

@@ -10,8 +10,11 @@ import java.util.Comparator;
 
 public class Term implements Comparable<Term> {
 
+	//private static final int r = 0;
 	private final String myWord;
 	private final double myWeight;
+	
+	//private final int myPrefixSize = r;
 
 	/**
 	 * The constructor for the Term class. Should set the values of word and
@@ -27,10 +30,20 @@ public class Term implements Comparable<Term> {
 	 *             if weight is negative
 	 */
 	public Term(String word, double weight) {
-		// TODO: Complete Term constructor
+		
 		
 		myWord = word;
 		myWeight = weight;
+		
+		if( word == null) {
+			throw new NullPointerException("word is null");
+					
+		}
+		if(weight < 0) {
+			throw new IllegalArgumentException("negative weight "+weight);
+			
+		}
+
 	}
 	
 	/**
@@ -69,6 +82,7 @@ public class Term implements Comparable<Term> {
 	 */
 	public static class PrefixOrder implements Comparator<Term> {
 		private final int myPrefixSize;
+		
 
 		public PrefixOrder(int r) {
 			this.myPrefixSize = r;
@@ -85,9 +99,30 @@ public class Term implements Comparable<Term> {
 		 *            - Two Terms whose words are being compared
 		 */
 		public int compare(Term v, Term w) {
-			// TODO: Implement compare
+		
+			int ans = 0;
 			
-			return 0;
+			if(v.myWord.length() < myPrefixSize && w.myWord.length() > myPrefixSize) {
+				return (v.myWord).compareTo((w.myWord).substring(0,myPrefixSize));
+			}
+			if(w.myWord.length() < myPrefixSize && v.myWord.length() > myPrefixSize ) {
+				return ((v.myWord).substring(0, myPrefixSize)).compareTo(w.myWord);
+				
+			}
+			
+			
+			if(w.myWord.length() <= myPrefixSize && v.myWord.length() <= myPrefixSize) {
+				return (v.myWord).compareTo(w.myWord);	
+				
+			}
+			if(w.myWord.length() > myPrefixSize && v.myWord.length()> myPrefixSize) {
+				return (v.myWord).substring(0,myPrefixSize).compareTo((w.myWord).substring(0, myPrefixSize));
+				
+				
+			}
+			return ans;
+			
+			//return ans;
 		}
 	
 	}
@@ -100,7 +135,17 @@ public class Term implements Comparable<Term> {
 	 */
 	public static class ReverseWeightOrder implements Comparator<Term> {
 		public int compare(Term v, Term w) {
+			if(v.myWeight > w.myWeight) {
+				return -1;
+			}
+			if(w.myWeight == v.myWeight) {
+				return 0;
+			}
+			if(w.myWeight> v.myWeight) {
+				return 1;
+			}
 			// TODO: implement compare
+			
 			
 			return 0;
 		}
@@ -114,7 +159,13 @@ public class Term implements Comparable<Term> {
 	 */
 	public static class WeightOrder implements Comparator<Term> {
 		public int compare(Term v, Term w) {
-			// TODO: implement compare
+			
+			if(v.myWeight >= w.myWeight) {
+				return 1;
+			}
+			if(w.myWeight>= v.myWeight) {
+				return -1;
+			}
 			
 			return 0;
 		}
