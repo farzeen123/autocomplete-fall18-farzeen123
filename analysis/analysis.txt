@@ -3,9 +3,38 @@ Put your name and netid here
 (1) Run the program BenchmarkForAutocomplete and copy/paste the 
 results here this for #matches = 20
 
+search size #match binarybrute
+	  456976 20	0.1745	0.0092
+a	  17576	20	0.0049	0.0112
+b	  17576	20	0.0032	0.0036
+c	  17576	20	0.0035	0.0037
+x	  17576	20	0.0033	0.0036
+y	  17576	20	0.0034	0.0034
+z	  17576	20	0.0036	0.0034
+aa	  676	20	0.0001	0.0035
+az	  676	20	0.0001	0.0038
+za	  676	20	0.0001	0.0036
+zz	  676	20	0.0002	0.0034
+
+
 (2) Run the program again for #matches = 10000, paste the results, 
 and then make any conclusions about how the # matches 
 effects the runtime. 
+
+ search	size	#match	binary	brute
+	456976	10000	0.1889	0.0221
+a	17576	10000	0.0034	0.0115
+b	17576	10000	0.0032	0.0070
+c	17576	10000	0.0033	0.0082
+x	17576	10000	0.0035	0.0074
+y	17576	10000	0.0035	0.0075
+z	17576	10000	0.0034	0.0075
+aa	676	  10000	    0.0009	0.0043
+az	676	  10000	    0.0002	 0.0051
+za	676	 10000	    0.0001	  0.0048
+zz	676	  10000	    0.0002	 0.0045
+   As noticed, when matches increases the value for binary still remain same and is always 
+   way less than brute. But in brutes case it just worsens.Binary still has lower time than brute.
 
 (3) Copy/paste the code from BruteAutocomplete.topMatches below. 
 Explain what the Big-Oh complexity of the entire loop: 
@@ -15,6 +44,28 @@ M, the number of terms that match the prefix.
 Assume that every priority-queue operation runs in O(log k) time. 
 Explain your answer which should be in terms of N, M, and k.
 
+
+for (Term t : myTerms) {                             N times
+			if (!t.getWord().startsWith(prefix))      this loop runs N-M times
+				continue;                           
+			if (pq.size() < k) {
+				pq.add(t);                                  Only happens M times since it matches with prefix O(M log K)
+			} else if (pq.peek().getWeight() < t.getWeight()) {
+				pq.remove();                                     O(M log k)
+				pq.add(t);
+			}
+		}
+		int numResults = Math.min(k, pq.size());
+		LinkedList<Term> ret = new LinkedList<>();
+		for (int i = 0; i < numResults; i++) {
+			ret.addFirst(pq.remove());
+		}
+		return ret;
+	}
+	
+	Look at my code please. ^
+	so O(N-M) + O(M log k)
+
 (4) Explain why the last for loop in BruteAutocomplete.topMatches 
 uses a LinkedList (and not an ArrayList) 
 AND why the PriorityQueue uses Term.WeightOrder to get 
@@ -22,9 +73,54 @@ the top k heaviest matches -- rather than
 using Term.ReverseWeightOrder.
 
 
+We are using Linked Lists because it is more efficient to add in linked lists. its O(1) when u add to linked lists
+for arrayList you iterate thro and has to change index so thats why it uses linked lists.
+Because its using priority queue. when you take a peek on the first one its sorted in heaviest order automatically.So you
+do not need to sort it thro reverse wait.
+
 (5) Explain what the runtime of the 
 BinarySearchAutocomplete.topMatches code that you 
 implemented is by copy/pasting the code below 
 and explaining your answer in terms of N, M, and k.
 
+public List<Term> topMatches(String prefix, int k) {
+		if(prefix== null) {
+			throw new NullPointerException("prefix is null");
+		}
+		if(k < 0) {
+			throw new NullPointerException("prefix is less than 0");
+		}
+		
+		
+		Term p = new Term(prefix,0);
+		
+		int FirstIndex = firstIndexOf(myTerms,p,new Term.PrefixOrder(prefix.length()) );  0(1+ (log2N ))
+	    int LastIndex = lastIndexOf(myTerms,p,new Term.PrefixOrder(prefix.length()));     0(1+ (log2N ))
+		ArrayList<Term> list = new ArrayList<>();
+		ArrayList<Term> ans = new ArrayList<>();
+		if(FirstIndex != -1 || LastIndex != -1) {
+			
+		
+		for(int l = FirstIndex; l<= LastIndex; l++) {           O(M)
+			list.add(myTerms[l]);         
+			
+		}
+		Collections.sort(list, new Term.ReverseWeightOrder());
+		if(list.size()>=k) {                  
+			for(int c = 0; c<k; c++) {                 O(k)
+				ans.add(list.get(c));
+			}
+			
+		}
+		else {
+			for(int c =0; c < list.size();c++) {       O(M)
+				ans.add(list.get(c));
+			}
+		}
+		}
+		return ans;
+	}
+}
+
+0(1+ (log2N ))+ O(M) + O(K)
 

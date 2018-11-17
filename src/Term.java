@@ -102,10 +102,10 @@ public class Term implements Comparable<Term> {
 		
 			int ans = 0;
 			
-			if(v.myWord.length() < myPrefixSize && w.myWord.length() > myPrefixSize) {
+			if(v.myWord.length() <= myPrefixSize && w.myWord.length() > myPrefixSize) {
 				return (v.myWord).compareTo((w.myWord).substring(0,myPrefixSize));
 			}
-			if(w.myWord.length() < myPrefixSize && v.myWord.length() > myPrefixSize ) {
+			if(w.myWord.length() <= myPrefixSize && v.myWord.length() > myPrefixSize ) {
 				return ((v.myWord).substring(0, myPrefixSize)).compareTo(w.myWord);
 				
 			}
@@ -120,6 +120,7 @@ public class Term implements Comparable<Term> {
 				
 				
 			}
+			
 			return ans;
 			
 			//return ans;

@@ -112,7 +112,7 @@ public class BinarySearchAutocomplete implements Autocompletor {
 			throw new NullPointerException("prefix is less than 0");
 		}
 		
-		PriorityQueue<Term> pq = new PriorityQueue<Term>(k, new Term.WeightOrder());
+		//PriorityQueue<Term> pq = new PriorityQueue<Term>(k, new Term.WeightOrder());
 		Term p = new Term(prefix,0);
 		
 		int FirstIndex = firstIndexOf(myTerms,p,new Term.PrefixOrder(prefix.length()) );
@@ -122,12 +122,12 @@ public class BinarySearchAutocomplete implements Autocompletor {
 		if(FirstIndex != -1 || LastIndex != -1) {
 			
 		
-		for(int l = FirstIndex; l< LastIndex; l++) {
+		for(int l = FirstIndex; l<= LastIndex; l++) {
 			list.add(myTerms[l]);
 			
 		}
 		Collections.sort(list, new Term.ReverseWeightOrder());
-		if(list.size()>k) {
+		if(list.size()>=k) {
 			for(int c = 0; c<k; c++) {
 				ans.add(list.get(c));
 			}
